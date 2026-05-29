@@ -1,17 +1,22 @@
 # ============================================================
-# Audio - I2S Audio Setup and Speaker Configuration (PATCHED)
+# Audio - I2S Audio Setup and Speaker Configuration
 # ============================================================
-# Patched for ESPHome 2026.5.0 speaker_source API changes.
-# Source speaker IDs updated to match new _spk_ naming convention.
+# Configures I2S DAC, mixer, and resampler for multi-source audio
+# Requires substitutions:
+#   - i2s_lrclk_pin
+#   - i2s_bclk_pin
+#   - i2s_dout_pin
+#   - task_stack_in_psram
 # ============================================================
+
 substitutions:
   audio_buffer_duration: 100ms
 
 i2s_audio:
-  - id: i2s_out
-    i2s_lrclk_pin: ${i2s_lrclk_pin}
-    i2s_bclk_pin: ${i2s_bclk_pin}
-
+- id: i2s_out
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+  
 speaker:
   - platform: i2s_audio
     id: i2s_speaker_id
@@ -23,6 +28,7 @@ speaker:
     channel: stereo
     timeout: never
     buffer_duration: ${audio_buffer_duration}
+
   - platform: mixer
     id: mixer_speaker_id
     output_speaker: i2s_speaker_id
@@ -33,14 +39,16 @@ speaker:
         timeout: never
       - id: media_spk_mixer_input
         timeout: never
+
   - platform: resampler
-    id: media_spk_resampling_input
+    id: media_spk_resampling_speaker
     output_speaker: media_spk_mixer_input
     task_stack_in_psram: ${task_stack_in_psram}
     sample_rate: 48000
     bits_per_sample: 16
+
   - platform: resampler
-    id: announcement_spk_resampling_input
+    id: announcement_spk_resampling_speaker
     output_speaker: announcement_spk_mixer_input
     task_stack_in_psram: ${task_stack_in_psram}
     sample_rate: 48000

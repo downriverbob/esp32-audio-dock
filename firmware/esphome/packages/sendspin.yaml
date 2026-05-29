@@ -62,7 +62,7 @@ media_player:
       format: FLAC
       num_channels: 1
       sample_rate: 48000
-      speaker: announcement_spk_resampling_input   # updated from announcement_mixer_input
+      speaker: announcement_spk_mixer_input   # updated from announcement_mixer_input
       sources:
         - http_announcement_source
 
